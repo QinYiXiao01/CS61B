@@ -20,6 +20,7 @@ public class LeapYear {
             System.out.println("Please enter command line arguments.");
             System.out.println("e.g. java Year 2000");
         }
+        
         for (int i = 0; i < args.length; i++) {
             try {
                 int year = Integer.parseInt(args[i]);

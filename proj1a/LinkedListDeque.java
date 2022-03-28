@@ -137,6 +137,7 @@ public class LinkedListDeque<T> {
             System.out.print(pointer.item + " ");
         }
     }
+
 }
 
 

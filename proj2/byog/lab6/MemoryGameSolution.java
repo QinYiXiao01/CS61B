@@ -93,6 +93,12 @@ public class MemoryGameSolution {
     public String solicitNCharsInput(int n) {
         String input = "";
         drawFrame(input);
+        /*
+        只是为了将屏幕显示的数字擦掉而已
+        StdDraw.clear();
+        StdDraw.clear(Color.black);
+        StdDraw.show();
+        */
 
         while (input.length() < n) {
             if (!StdDraw.hasNextKeyTyped()) {

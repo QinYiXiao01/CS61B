@@ -43,7 +43,7 @@ public class HexWorld {
         for (int i = x; i <= x + height ; i++) {
             for (int j = y; j <= y + width ; j++) {
                 world[i][j] = getType(num);
-                addBlank(world, i, j, s); // 添加空格
+                addBlank(world, i - x, j - y, s); // 添加空格
             }
         }
     }

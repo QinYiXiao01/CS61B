@@ -11,7 +11,7 @@ public class ArrayDeque<T> {
         this.items = (T[]) new Object[8];
         size = 0;
         nextFirst = 3;
-        nextLast = 4;
+        nextLast = 3;
     }
 
     // 拷贝其他数组队列
@@ -44,14 +44,14 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * 扩容
+     * 扩容，扩完之后 {e, e, e} -> {e, e, e, null, null, null}
      */
     public void grow() {
         int formerLength = items.length;
         T[] a = (T[])new Object[(int) (formerLength * RFACTOR)]; // 建立新数组
         int pointer = nextFirst;
         while (true) {
-            pointer = minusOne(pointer);
+            pointer = plusOne(pointer);
             a[pointer] = items[pointer];
             if (pointer == nextFirst) {
                 break;
@@ -63,10 +63,25 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * 缩容
+     * 缩容, 缩完之后，{e, e, e, null, null, ..., e, e} -> {e, e, e, e, null, null}
      */
     public void shrink() {
-
+        // 扩容之后必定前指针在最最后，前指针在物品最后
+        int formerLength = items.length;
+        T[] b = (T[])new Object[(int) (formerLength / RFACTOR)];
+        int pointer1 = nextFirst;
+        int pointer2 = 0;
+        while (true) {
+            b[pointer2] = items[pointer1];
+            pointer2 = plusOne(pointer2);
+            pointer1 = plusOne(pointer1);
+            if (pointer1 == nextFirst) {
+                break;
+            }
+        }
+        items = b;
+        nextFirst = items.length - 1; // 前指针来到最后
+        nextLast = size; // 后指针来到后一个
     }
 
     /**
@@ -121,22 +136,22 @@ public class ArrayDeque<T> {
     }
 }
 
-class Test {
-    public static void main(String[] args) {
-        ArrayDeque<Integer> deque = new ArrayDeque();
-        deque.addFirst(1);
-        deque.addFirst(2);
-        deque.addFirst(3);
-        deque.addFirst(4);
-        deque.addFirst(5);
-        deque.addFirst(6);
-        deque.addFirst(7);
-        deque.addLast(8);
-        deque.addLast(9);
-        deque.addFirst(10);
-        deque.addFirst(11);
-
-    }
-}
+//class Test {
+//    public static void main(String[] args) {
+//        ArrayDeque<Integer> deque = new ArrayDeque();
+//        deque.addFirst(1);
+//        deque.addFirst(2);
+//        deque.addFirst(3);
+//        deque.addFirst(4);
+//        deque.addFirst(5);
+//        deque.addFirst(6);
+//        deque.addFirst(7);
+//        deque.addLast(8);
+//        deque.addLast(9);
+//        deque.addFirst(10);
+//        deque.addFirst(11);
+//
+//    }
+//}
 
 

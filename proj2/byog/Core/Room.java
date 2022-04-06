@@ -17,6 +17,7 @@ public class Room {
         this.y = y;
         this.xLength = xLength;
         this.yLength = yLength;
+        outAdjust();
     }
 
     /**

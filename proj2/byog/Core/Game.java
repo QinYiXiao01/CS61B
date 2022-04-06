@@ -33,13 +33,9 @@ public class Game {
         // TODO: Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
-        Random roomNumSeed = new Random(200148);
         TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
-        int roomNum = RandomUtils.uniform(roomNumSeed, 8);
-        for (int i = 0; i < roomNum; i++) {
-            WorldGenerator generator = new WorldGenerator(WIDTH, HEIGHT, input);
-            finalWorldFrame = generator.generateWorld();
-        }
+        WorldGenerator generator = new WorldGenerator(WIDTH, HEIGHT, input);
+        finalWorldFrame = generator.generateWorld();
         return finalWorldFrame;
     }
 }

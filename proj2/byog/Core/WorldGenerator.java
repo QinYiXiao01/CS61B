@@ -25,37 +25,45 @@ public class WorldGenerator {
             }
         }
         // 添加房间
-        addRoom(world, new Random(Integer.parseInt(seed)));
-        /*Random roomNumSeed = new Random(200148);
-        int roomNum = RandomUtils.uniform(roomNumSeed, 8);
-        for (int i = 0; i < roomNum; i++) {
-            addRoom(world, new Random(Integer.parseInt(seed)));
-        }
-         */
+        addRooms(world, new Random(Integer.parseInt(seed)));
         return world;
     }
 
 
     /**
-     * 传进要编辑的世界，一次只生成一个房间
-     * @param world
+     * 传进要编辑的世界，之前想错了，应该是一下子生成所有的房间
+     * @param blankWorld
      */
-    public void addRoom(TETile[][] world, Random roomSeed) {
-        int x = roomSeed.nextInt(width); // RandomUtils.uniform(roomSeed, width);
-        int y = roomSeed.nextInt(height);
-        int xLength = roomSeed.nextInt(2, 10);
-        int yLength = roomSeed.nextInt(2, 10);
-        Room room = new Room(x, y, xLength, yLength);
-        room.outAdjust();
+    public TETile[][] addRooms(TETile[][] blankWorld, Random roomSeed) {
+        TETile[][] world = blankWorld;
+        // 得到房间的总个数
+        Random roomNumSeed = new Random(2001482);
+        int roomNum = roomNumSeed.nextInt(20);
+        for (int i = 0; i < roomNum; i++) {
+            int x = roomSeed.nextInt(width);
+            int y = roomSeed.nextInt(height);
+            int xLength = roomSeed.nextInt(2, 10);
+            int yLength = roomSeed.nextInt(2, 10);
+            Room room = new Room(x, y, xLength, yLength);
+            world = addSingleRoom(world, room);
+        }
+        return world;
+    }
 
-        x = room.getX();
-        y = room.getY();
-        xLength = room.getxLength();
-        yLength = room.getyLength();
-
+    /**
+     * 添加一个房间
+     * @param world
+     * @param room
+     * @return
+     */
+    public TETile[][] addSingleRoom(TETile[][] world, Room room) {
+        int x = room.getX();
+        int y = room.getY();
+        int xLength = room.getxLength();
+        int yLength = room.getyLength();
         // 如果重叠了，就退出方法
         if (room.isOverlap(world)) {
-            return;
+            return null;
         }
         // 没重叠，就创建一个房间
         for (int i = x - xLength / 2; i <= x + xLength / 2; i++) {
@@ -68,5 +76,6 @@ public class WorldGenerator {
                 }
             }
         }
+        return world;
     }
 }

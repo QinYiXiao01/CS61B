@@ -1,5 +1,5 @@
 // TODO: Make sure to make this class a part of the synthesizer package
-//package <package name>;
+package synthesizer ;
 
 //Make sure this class is public
 public class GuitarString {
@@ -18,6 +18,11 @@ public class GuitarString {
         //       cast the result of this divsion operation into an int. For better
         //       accuracy, use the Math.round() function before casting.
         //       Your buffer should be initially filled with zeros.
+        int capacity = (int)Math.round(SR / frequency);
+        buffer = new ArrayRingBuffer<>(capacity);
+        for (int i = 0; i < capacity; i++) {
+            buffer.enqueue(0.0);
+        }
     }
 
 
@@ -28,6 +33,41 @@ public class GuitarString {
         //       double r = Math.random() - 0.5;
         //
         //       Make sure that your random numbers are different from each other.
+        for (int i = 0; i < buffer.capacity(); i++) {
+            buffer.dequeue();
+        }
+        for (int i = 0; i < buffer.capacity(); i++) {
+            double num = Math.random() - 0.5;
+
+        }
+    }
+
+    /**
+     * 得到随机的值（并与队列里其他均不相等）
+     * @return
+     */
+    public double getRandNum(ArrayRingBuffer<Double> buffer) {
+        double randNum;
+        int first = buffer.getFirst(); // 他是原来的first
+        while(true) {
+            buffer.setFirst(first);
+            randNum = Math.random() - 0.5; // 先生成一个随机数
+            if (isUnique(buffer, randNum)) {
+                break;
+            }
+            continue;
+        }
+        return randNum;
+    }
+
+    public boolean isUnique(ArrayRingBuffer<Double> buffer, double num) {
+        for (int i = 0; i < buffer.capacity(); i++) {
+            buffer.setFirst(buffer.move(buffer.getFirst())); // first往后走
+            if  (buffer.peek() == num) {
+                return false; // 若碰到一样的了就退出遍历
+            }
+        }
+        return true;
     }
 
     /* Advance the simulation one time step by performing one iteration of

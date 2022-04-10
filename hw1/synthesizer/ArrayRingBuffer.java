@@ -1,6 +1,8 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 package synthesizer;
 
+import java.util.Iterator;
+
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
 public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
@@ -39,9 +41,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         if (isFull()) {
             throw new RuntimeException("Ring buffer overflow");
         }
-        if (rb[last] != null) {
-            last = move(last);
-        }
+
         rb[last] = x;
         last = move(last);  // 加到队列后面
         fillCount++;
@@ -58,11 +58,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         if (isEmpty()) {
             throw new RuntimeException("Ring buffer underflow");
         }
-        if (rb[first] == null) {
-            first = move(first);
-        }
+
         firstItem = rb[first];
-        rb[first] = null;
         first = move(first);
         fillCount--;
 
@@ -91,7 +88,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
 
     @Override
     public boolean isEmpty() {
-        return this.capacity == 0;
+        return this.fillCount == 0;
     }
 
     @Override
@@ -120,4 +117,25 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
+    public Iterator<T> iterator() {
+        return new ArrayRingBufferIterator();
+    }
+
+    private class ArrayRingBufferIterator implements Iterator<T> {
+        private int pointer;
+        private int curNum;
+        public ArrayRingBufferIterator() {
+            pointer = 0;
+            curNum = 0;
+        }
+
+        public boolean hasNext() {
+            return curNum < fillCount;
+        }
+
+        public T next() {
+            curNum++;
+            return rb[move(pointer)];
+        }
+    }
 }

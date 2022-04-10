@@ -33,12 +33,12 @@ public class GuitarString {
         //       double r = Math.random() - 0.5;
         //
         //       Make sure that your random numbers are different from each other.
-        for (int i = 0; i < buffer.capacity(); i++) {
+        while(!buffer.isEmpty()) {
             buffer.dequeue();
         }
-        for (int i = 0; i < buffer.capacity(); i++) {
-            double num = Math.random() - 0.5;
-
+        while(!buffer.isFull()) {
+            double randNum = getRandNum((ArrayRingBuffer<Double>) buffer);
+            buffer.enqueue(randNum);
         }
     }
 
@@ -77,11 +77,13 @@ public class GuitarString {
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
+        double dqItem = buffer.dequeue();
+        buffer.enqueue(DECAY * (dqItem + buffer.peek()) * 0.5);
     }
 
     /* Return the double at the front of the buffer. */
     public double sample() {
         // TODO: Return the correct thing.
-        return 0;
+        return buffer.peek();
     }
 }

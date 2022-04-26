@@ -3,7 +3,6 @@ package hw4.puzzle;
 import edu.princeton.cs.algs4.MinPQ;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Solver {
     private ArrayList<WorldState> solution;
@@ -40,6 +39,7 @@ public class Solver {
      * everything necessary for moves() and solution() to
      * not have to solve the problem again. Solves the
      * puzzle using the A* algorithm. Assumes a solution exists.
+     *
      * @param initial
      */
     public Solver(WorldState initial) {
@@ -49,38 +49,40 @@ public class Solver {
         // 将祖宗结点放入树中
         SearchNode prev = null;
         int step = 0;
-        SearchNode curNode = new SearchNode(initial, step, prev);
-        sequence.insert(curNode);
-        solution.add(initial);
+        sequence.insert(new SearchNode(initial, step, prev));
 
-
-        for (SearchNode node : sequence) {
-            prev = sequence.delMin();
-            solution.add(prev.getState());
+        while (true) {
+            SearchNode current = sequence.delMin();
+            solution.add(current.getState());
+            prev = current;
             step++;
-            if (node.state.isGoal()) {
+            if (current.state.isGoal()) {
                 this.moves = step;
                 return;
             }
             // 加入当前结点状态的邻居们
-            for (WorldState neighbor : curNode.state.neighbors()) {
-                sequence.insert(new SearchNode(neighbor, step, prev));
+            for (WorldState neighbor : current.state.neighbors()) {
+                if (!neighbor.equals(current.prev.state)) {
+                    sequence.insert(new SearchNode(neighbor, step, prev));
+                }
             }
         }
     }
 
     /**
-     *  Returns the minimum number of moves to solve the puzzle starting
-     *  at the initial WorldState.
+     * Returns the minimum number of moves to solve the puzzle starting
+     * at the initial WorldState.
+     *
      * @return
      */
-    public int moves(){
+    public int moves() {
         return this.moves;
     }
 
     /**
      * Returns a sequence of WorldStates from the initial WorldState
      * to the solution.
+     *
      * @return
      */
     public Iterable<WorldState> solution() {
